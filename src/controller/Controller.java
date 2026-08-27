@@ -4,6 +4,8 @@ import model.Formatador;
 import model.Titulo;
 
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +55,37 @@ public class Controller {
         return linha;
     }
 
+    public String transValorLiquido(String bandeira, String valorLiquido) {
+        //this.valorLiquido = valorLiquido.replace(",", "");
+        // Remove vírgulas e converte para BigDecimal
+    BigDecimal valor = new BigDecimal(valorLiquido.replace(",", "."));
+
+    BigDecimal desconto = BigDecimal.ZERO;
+
+    switch (bandeira) {
+        case "Amex":
+            desconto = new BigDecimal("0.029116");
+            break;
+        case "Mastercard":
+            desconto = new BigDecimal("0.030158");
+            break;
+        case "Visa":
+            desconto = new BigDecimal("0.030216");
+            break;
+        case "Elo":
+            desconto = new BigDecimal("0.030109");
+            break;
+        default:
+            desconto = BigDecimal.ZERO; // sem desconto para outras bandeiras
+    }
+
+    // Aplica o desconto: valor líquido - (valor líquido * desconto)
+    BigDecimal valorComDesconto = valor.subtract(valor.multiply(desconto));
+
+    // Converte de volta para String, com 2 casas decimais
+    return valorComDesconto.setScale(2, RoundingMode.HALF_UP).toString().replace(".", "");
+    }
+
     private String pegarDados(String linha, int intertator) {
         Titulo titulo = new Titulo();
         String[] separado = linha.split(";");
@@ -66,7 +99,7 @@ public class Controller {
         titulo.setNumeroCartao(separado[17]);
         titulo.setValorBruto(separado[3].replace(".", ""));
         titulo.setTotalParcela(separado[22]);
-        titulo.setValorLiquido(separado[7].replace(".", ""));
+        titulo.setValorLiquido(transValorLiquido(separado[21], separado[7].replace(".", "")));
         titulo.setValorOriginal("");
         titulo.setDataCredito(separado[0]);
         titulo.setDataCreditoOriginal("");

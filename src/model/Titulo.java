@@ -1,5 +1,8 @@
 package model;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class Titulo {
 
     Formatador f = new Formatador();
@@ -118,7 +121,7 @@ public class Titulo {
     }
 
     public void setValorLiquido(String valorLiquido) {
-        this.valorLiquido = valorLiquido.replace(",", "" );
+        this.valorLiquido = valorLiquido.replace(",", "");        
     }
 
     public String getValorOriginal() {
