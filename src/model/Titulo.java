@@ -118,7 +118,7 @@ public class Titulo {
     }
 
     public void setValorLiquido(String valorLiquido) {
-        this.valorLiquido = valorLiquido.replace(",", "");
+        this.valorLiquido = valorLiquido.replace(",", "" );
     }
 
     public String getValorOriginal() {
